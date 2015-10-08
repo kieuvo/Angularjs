@@ -5,12 +5,11 @@ angular.module('ui.bootstrap.demo')
     $tooltipProvider.options({
       appendToBody: true
     });
-  });
-
+  })
 // ParentCtrl  controller: add new data list
 angular.module('ui.bootstrap.demo').controller('ParentCtrl', function ($scope,$http)
 {
-	$scope.isCollapsed = true;
+	
 	$scope.saigon = {
 		"value": [
 		  {
@@ -236,33 +235,31 @@ angular.module('ui.bootstrap.demo').controller('ParentCtrl', function ($scope,$h
 		]
 		}; 	 	
 	
-});
-
-// Child controller ParentCtrl 
-angular.module('ui.bootstrap.demo').controller('ChildCtrl', function ($scope,$http,$sce)
-{
-	  $scope.dynamicTooltip = 'Hello, World!';
-  	  $scope.dynamicTooltipText = 'dynamic';
- 	  
-  	  $scope.htmlTooltip = $sce.trustAsHtml('I\'ve been made <b>bold</b>!');
-	  
-
-
-
-	$scope.myData = {}; // contains items of the returned list
-	$scope.myText = ' Select Driver to pair '; // displayed text
-	$scope.textSave = ''; // save myText variable in case user expand the dropdown list but don't choose anything
-	var check = '';
-	// get name of the list
-	check = angular.element(document.querySelector( '#button_toggle' )).attr('list');
-	
-	// if the list is in "slist" of parent’s controller 
-	if(check == 'saigon' || check == 'hanoi' ||check == 'hue')
-	{
+})
+.directive('mytext', function($rootScope){
+ 
+    return {
+            templateUrl: "text.html",
+           scope: {
+		      listt: '@',
+		      selectt : '@',
+		    },
+       link: function($scope, iElement, attributes) {      	
+       	$scope.isCollapsed = true;
+    	var check = attributes.listt;
+    	var id = attributes.selectt;
+    	//var check  = $scope.$eval(attributes.list);
+	    $scope.myData = {}; // contains items of the returned list
+		$scope.myText = ' Select Driver to pair '; // displayed text
+		$scope.textSave = ''; // save myText variable in case user expand the dropdown list but don't choose anything
+		
+		// if the list is in "slist" of parent’s controller 
+		if(check == 'saigon' || check == 'hanoi' ||check == 'hue')
+		{
 		
 		var my_data = $scope.$parent[check]['value'];
 		// get the id
-		var id = angular.element(document.querySelector( '#button_toggle' )).attr('select');
+		
 
 		// if that id exists and is NOT NULL, find it in the list			
 		if(id != undefined && id != '' )
@@ -321,30 +318,6 @@ angular.module('ui.bootstrap.demo').controller('ChildCtrl', function ($scope,$ht
 	
 	}
 
-	// clicking on dropdown button will trigger "onedit" function
-	$scope.onedit = function(e){
-		// get elements for "onedit" function
-		var myEl = angular.element(e.currentTarget);
-			
-		if(myEl.hasClass('bg-button'))
-		{
-			//myEl.removeClass('bg-button');
-			//$scope.myText = ' Select Driver / Pair Vehicle ';
-			if($scope.textSave != ''){
-				$scope.myText = $scope.textSave;
-			}			
-		}		
-	  	else
-	  	{
-	  		//myEl.addClass('bg-button');
-	  		$scope.myText = ' Select Driver to pair ';
-	  		if($scope.textSave != ''){
-				$scope.myText = $scope.textSave;
-			} 	
-	  	}	  	
-	  	
-	};
-
 	// event "ng-click" of "li" (in html) will trigger function "select"
 	$scope.select = function(e){
 		// close the dropdown list
@@ -355,8 +328,8 @@ angular.module('ui.bootstrap.demo').controller('ChildCtrl', function ($scope,$ht
 		// get atrr "data-select" of that element
 		var select = text.attr('data-select');
 		// add attr "select" & "list" and remove class "bg-button"
-		angular.element(document.querySelector( '#button_toggle' )).attr('select',select);
-		angular.element(document.querySelector( '#button_toggle' )).attr('list',check);
+		angular.element(document.querySelector( 'mytext' )).attr('selectt',select);
+		angular.element(document.querySelector( 'mytext' )).attr('listt',check);
 		angular.element(document.querySelector( '#button_toggle' )).addClass('bg-button');
 		angular.element(document.querySelector( '#button_toggle' )).addClass('bg-button-a');
 		$scope.myText = text.text();
@@ -367,6 +340,7 @@ angular.module('ui.bootstrap.demo').controller('ChildCtrl', function ($scope,$ht
 	// filter data when search
 	$scope.friendContainsSearchText = function(x)
 	{
+		// if "searchText" is NOT FOUND
 		if(!$scope.searchText) return 1;
 		// find "searchText" in column "name_driver" or "vehicle" (not case-sensitive)
 	    else
@@ -389,12 +363,11 @@ angular.module('ui.bootstrap.demo').controller('ChildCtrl', function ($scope,$ht
 		// show tooltip
 		$scope.showTooltip = true;
 	}
-	
-	
+      
+
+      
+ 	},
+ }
+              
 });
 
-
-
-
-
-   
