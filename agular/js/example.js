@@ -367,9 +367,8 @@ angular.module('ui.bootstrap.demo').controller('ChildCtrl', function ($scope,$ht
 	// filter data when search
 	$scope.friendContainsSearchText = function(x)
 	{
-		// if "searchText" is NOT FOUND
 		if(!$scope.searchText) return 1;
-		// find "searchText" in column "name_driver" & "vehicle" (not case-sensitive)
+		// find "searchText" in column "name_driver" or "vehicle" (not case-sensitive)
 	    else
 	    return x.name_driver.toLowerCase().indexOf($scope.searchText.toLowerCase()) >= 0 || x.vehicle.toLowerCase().indexOf($scope.searchText.toLowerCase()) >= 0
 	}
